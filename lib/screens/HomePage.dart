@@ -11,7 +11,6 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   String username;
   List<Repository> repositories;
-  Future<List<Repository>> _quotationsFuture;
   TextEditingController userNameController = TextEditingController();
 
   @override
@@ -85,16 +84,9 @@ class _HomePageState extends State<HomePage> {
       repositories = response;
     });
   }
-
-  Future<List<Repository>> searchRepos() async {
-    var user = RepositoryNetworking.searchRepos(username);
-    print(user);
-    return user;
-  }
 }
 
 class DetailPage extends StatefulWidget {
-  Future<List<Repository>> _quotationsFuture;
   List<Repository> listRespo;
   DetailPage(this.listRespo);
   @override
@@ -105,56 +97,46 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
-        child: _createListQuotation(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[_createListQuotation()],
+        ),
       ),
     );
   }
 
   _createListQuotation() {
-    return FutureBuilder<List<Repository>>(
-      future: widget._quotationsFuture,
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-            return Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Center(child: CircularProgressIndicator()),
-            );
-          default:
-            if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
-            } else {
-              if (snapshot.data != null) {
-                widget.listRespo.toList();
-              }
-
-              if (snapshot.data == null ||
-                  widget.listRespo == null ||
-                  widget.listRespo.length == 0) {
-                return Center(
-                    child: Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child:
-                      new Text('Nenhum pagamento encontrado para esta data!'),
-                ));
-              }
-
-              return Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount:
-                      widget.listRespo == null ? 0 : widget.listRespo.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var respo = widget.listRespo[index];
-                    return Text('${respo.id}');
-                  },
-                ),
-              );
-            }
-        }
-      },
+    return Expanded(
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: widget.listRespo == null ? 0 : widget.listRespo.length,
+        itemBuilder: (BuildContext context, int index) {
+          var respository = widget.listRespo[index];
+          return Card(
+            child: Container(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    '${respository.name}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    '${respository.description}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Text(
+                    '${respository.language}',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            )),
+          );
+        },
+      ),
     );
   }
 }
