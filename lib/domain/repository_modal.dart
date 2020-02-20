@@ -1,6 +1,4 @@
-import 'owner_modal.dart';
-
-class RepositoryResponse {
+class Repository {
   int id;
   String nodeId;
   String name;
@@ -65,17 +63,17 @@ class RepositoryResponse {
   bool hasWiki;
   bool hasPages;
   int forksCount;
-  Null mirrorUrl;
+  String mirrorUrl;
   bool archived;
   bool disabled;
   int openIssuesCount;
-  Null license;
+  License license;
   int forks;
   int openIssues;
   int watchers;
   String defaultBranch;
 
-  RepositoryResponse(
+  Repository(
       {this.id,
       this.nodeId,
       this.name,
@@ -150,7 +148,7 @@ class RepositoryResponse {
       this.watchers,
       this.defaultBranch});
 
-  RepositoryResponse.fromJson(Map<String, dynamic> json) {
+  Repository.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nodeId = json['node_id'];
     name = json['name'];
@@ -219,7 +217,8 @@ class RepositoryResponse {
     archived = json['archived'];
     disabled = json['disabled'];
     openIssuesCount = json['open_issues_count'];
-    license = json['license'];
+    license =
+        json['license'] != null ? new License.fromJson(json['license']) : null;
     forks = json['forks'];
     openIssues = json['open_issues'];
     watchers = json['watchers'];
@@ -298,11 +297,126 @@ class RepositoryResponse {
     data['archived'] = this.archived;
     data['disabled'] = this.disabled;
     data['open_issues_count'] = this.openIssuesCount;
-    data['license'] = this.license;
+    if (this.license != null) {
+      data['license'] = this.license.toJson();
+    }
     data['forks'] = this.forks;
     data['open_issues'] = this.openIssues;
     data['watchers'] = this.watchers;
     data['default_branch'] = this.defaultBranch;
+    return data;
+  }
+}
+
+class Owner {
+  String login;
+  int id;
+  String nodeId;
+  String avatarUrl;
+  String gravatarId;
+  String url;
+  String htmlUrl;
+  String followersUrl;
+  String followingUrl;
+  String gistsUrl;
+  String starredUrl;
+  String subscriptionsUrl;
+  String organizationsUrl;
+  String reposUrl;
+  String eventsUrl;
+  String receivedEventsUrl;
+  String type;
+  bool siteAdmin;
+
+  Owner(
+      {this.login,
+      this.id,
+      this.nodeId,
+      this.avatarUrl,
+      this.gravatarId,
+      this.url,
+      this.htmlUrl,
+      this.followersUrl,
+      this.followingUrl,
+      this.gistsUrl,
+      this.starredUrl,
+      this.subscriptionsUrl,
+      this.organizationsUrl,
+      this.reposUrl,
+      this.eventsUrl,
+      this.receivedEventsUrl,
+      this.type,
+      this.siteAdmin});
+
+  Owner.fromJson(Map<String, dynamic> json) {
+    login = json['login'];
+    id = json['id'];
+    nodeId = json['node_id'];
+    avatarUrl = json['avatar_url'];
+    gravatarId = json['gravatar_id'];
+    url = json['url'];
+    htmlUrl = json['html_url'];
+    followersUrl = json['followers_url'];
+    followingUrl = json['following_url'];
+    gistsUrl = json['gists_url'];
+    starredUrl = json['starred_url'];
+    subscriptionsUrl = json['subscriptions_url'];
+    organizationsUrl = json['organizations_url'];
+    reposUrl = json['repos_url'];
+    eventsUrl = json['events_url'];
+    receivedEventsUrl = json['received_events_url'];
+    type = json['type'];
+    siteAdmin = json['site_admin'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['login'] = this.login;
+    data['id'] = this.id;
+    data['node_id'] = this.nodeId;
+    data['avatar_url'] = this.avatarUrl;
+    data['gravatar_id'] = this.gravatarId;
+    data['url'] = this.url;
+    data['html_url'] = this.htmlUrl;
+    data['followers_url'] = this.followersUrl;
+    data['following_url'] = this.followingUrl;
+    data['gists_url'] = this.gistsUrl;
+    data['starred_url'] = this.starredUrl;
+    data['subscriptions_url'] = this.subscriptionsUrl;
+    data['organizations_url'] = this.organizationsUrl;
+    data['repos_url'] = this.reposUrl;
+    data['events_url'] = this.eventsUrl;
+    data['received_events_url'] = this.receivedEventsUrl;
+    data['type'] = this.type;
+    data['site_admin'] = this.siteAdmin;
+    return data;
+  }
+}
+
+class License {
+  String key;
+  String name;
+  String spdxId;
+  String url;
+  String nodeId;
+
+  License({this.key, this.name, this.spdxId, this.url, this.nodeId});
+
+  License.fromJson(Map<String, dynamic> json) {
+    key = json['key'];
+    name = json['name'];
+    spdxId = json['spdx_id'];
+    url = json['url'];
+    nodeId = json['node_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['key'] = this.key;
+    data['name'] = this.name;
+    data['spdx_id'] = this.spdxId;
+    data['url'] = this.url;
+    data['node_id'] = this.nodeId;
     return data;
   }
 }
