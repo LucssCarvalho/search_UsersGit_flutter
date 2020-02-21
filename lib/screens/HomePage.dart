@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_users_flutter/domain/repository_modal.dart';
-import 'package:github_users_flutter/networking/respository_networking.dart';
+import 'package:github_users_flutter/domain/user_modal.dart';
+import 'package:github_users_flutter/networking/user_network.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   String username;
-  List<Repository> repositories;
+  User user;
   TextEditingController userNameController = TextEditingController();
 
   @override
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               new MaterialPageRoute(
-                                builder: (context) => DetailPage(repositories),
+                                builder: (context) => DetailPage(user),
                               ),
                             );
                           }
@@ -79,16 +80,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   _selectDate(username) async {
-    var response = await RepositoryNetworking.searchRepos(username);
+    var response = await UserNetworking.searchUser(username);
     setState(() {
-      repositories = response;
+      user = response;
     });
   }
 }
 
 class DetailPage extends StatefulWidget {
-  List<Repository> listRespo;
-  DetailPage(this.listRespo);
+  User newUser;
+  DetailPage(this.newUser);
   @override
   _DetailPageState createState() => _DetailPageState();
 }
@@ -97,6 +98,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -108,35 +110,28 @@ class _DetailPageState extends State<DetailPage> {
 
   _createListQuotation() {
     return Expanded(
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: widget.listRespo == null ? 0 : widget.listRespo.length,
-        itemBuilder: (BuildContext context, int index) {
-          var respository = widget.listRespo[index];
-          return Card(
-            child: Container(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    '${respository.name}',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '${respository.description}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  Text(
-                    '${respository.language}',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ],
+        child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircleAvatar(
+            radius: 60.0,
+            backgroundImage: NetworkImage("${widget.newUser.avatarUrl}"),
+            backgroundColor: Colors.transparent,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              '${widget.newUser.login}',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                decoration: TextDecoration.none,
               ),
-            )),
-          );
-        },
+            ),
+          ),
+        ],
       ),
-    );
+    ));
   }
 }
