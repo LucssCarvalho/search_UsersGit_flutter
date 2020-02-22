@@ -27,7 +27,7 @@ class User {
   String blog;
   String location;
   String email;
-  String hireable;
+  bool hireable;
   String bio;
   int publicRepos;
   int publicGists;

@@ -31,7 +31,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     blog: json['blog'] as String,
     location: json['location'] as String,
     email: json['email'] as String,
-    hireable: json['hireable'] as String,
+    hireable: json['hireable'] as bool,
     bio: json['bio'] as String,
     publicRepos: json['public_repos'] as int,
     publicGists: json['public_gists'] as int,
