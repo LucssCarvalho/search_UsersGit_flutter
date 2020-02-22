@@ -11,14 +11,10 @@ class UserNetworking {
     var header = {"Content-Type": "application/json"};
 
     var response = await http.get(url, headers: header);
-
+    Map bodyJson = json.decode(response.body);
     if (response.statusCode == 200) {
-      var bodyJson = json.decode(response.body);
-      Map mapResponse = bodyJson;
-
-      return User.fromJson(mapResponse);
-    } else {
-      throw Exception('Failed to load post');
+      return User.fromJson(bodyJson);
     }
+    return null;
   }
 }
