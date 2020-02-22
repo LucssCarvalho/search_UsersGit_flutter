@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:github_users_flutter/domain/repository_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
+import 'package:github_users_flutter/helper/dialog.dart';
 import 'package:github_users_flutter/networking/user_network.dart';
+
+import 'User_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,12 +19,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: createBottomBar(),
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff3A556A), Color(0xff24292E)])),
+        decoration: BoxDecoration(color: Color(0xff24292E)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -31,6 +30,16 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: <Widget>[
                   Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Container(
+                      height: 200,
+                      width: 200,
+                      child: Image.asset(
+                        'assets/github-mark.png',
+                      ),
+                    ),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(left: 50.0, right: 50.0),
                     child: TextFormField(
                       controller: userNameController,
@@ -38,6 +47,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white, fontWeight: FontWeight.w300),
                       cursorColor: Colors.blue,
                       decoration: const InputDecoration(
+                        fillColor: Colors.greenAccent,
                         border: OutlineInputBorder(),
                         hintText: 'Enter your username',
                         hintStyle: TextStyle(color: Colors.blueGrey),
@@ -56,14 +66,6 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(50),
                       child: RaisedButton(
                         onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                builder: (context) => DetailPage(user),
-                              ),
-                            );
-                          }
                           _selectDate(userNameController.text);
                         },
                         child: Text('Search'),
@@ -79,59 +81,44 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _selectDate(username) async {
-    var response = await UserNetworking.searchUser(username);
-    setState(() {
-      user = response;
-    });
-  }
-}
-
-class DetailPage extends StatefulWidget {
-  User newUser;
-  DetailPage(this.newUser);
-  @override
-  _DetailPageState createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget createBottomBar() {
     return Container(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[_createListQuotation()],
-        ),
+      color: Color(0xff24292E),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Created LucssCarvalho',
+            style: TextStyle(fontSize: 10, color: Colors.blueGrey),
+          ),
+        ],
       ),
     );
   }
 
-  _createListQuotation() {
-    return Expanded(
-        child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 60.0,
-            backgroundImage: NetworkImage("${widget.newUser.avatarUrl}"),
-            backgroundColor: Colors.transparent,
+  _selectDate(username) async {
+    var response = await UserNetworking.searchUser(username);
+    if (response != null) {
+      setState(() {
+        user = response;
+      });
+      if (_formKey.currentState.validate()) {
+        Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => User_screen(user),
           ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              '${widget.newUser.login}',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                decoration: TextDecoration.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    ));
+        );
+      }
+    } else {
+      return showDialog(
+        builder: (BuildContext context) => CustomDialog(
+          title: "User not found",
+          description: "user not found or \naccount does not exist",
+          buttonText: "back",
+        ),
+        context: context,
+      );
+    }
   }
 }
