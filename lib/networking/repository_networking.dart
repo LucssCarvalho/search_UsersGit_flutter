@@ -5,10 +5,9 @@ import 'package:http/http.dart' as http;
 class RepositoryNetworking {
   static const String urlApi = 'https://api.github.com';
 
-  static Future<List<Repository>> searchRepos(username) async {
+  static Future<List<Repository>> searchRepos(String username) async {
     var url = '$urlApi/users/$username/repos';
 
-    var respository;
     var header = {"Content-Type": "application/json"};
 
     var response = await http.get(url, headers: header);
