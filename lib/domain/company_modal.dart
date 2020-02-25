@@ -62,4 +62,9 @@ class Company {
       this.createdAt,
       this.updatedAt,
       this.type});
+
+  factory Company.fromJson(Map<String, dynamic> json) =>
+      _$CompanyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CompanyToJson(this);
 }
