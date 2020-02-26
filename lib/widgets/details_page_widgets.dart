@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
 import 'package:github_users_flutter/helper/dialog.dart';
+import 'package:github_users_flutter/networking/company_networking.dart';
 import 'package:github_users_flutter/networking/repository_networking.dart';
 import 'package:github_users_flutter/screens/ListRepositories_screen.dart';
+import 'package:github_users_flutter/screens/company_screen.dart';
 
-cardDataUser(User user, context) {
+cardDataUser( user, context) {
   return Padding(
     padding: const EdgeInsets.all(5.0),
     child: Card(
@@ -19,7 +21,7 @@ cardDataUser(User user, context) {
               'company',
             ),
             onTap: () {
-              _selectCompany(user.login, context);
+              _selectCompany(user.company, context);
             },
           ),
           InkWell(
@@ -90,13 +92,13 @@ _selectRepository(String username, context) async {
   }
 }
 
-_selectCompany(String username, context) async {
-  var response = await RepositoryNetworking.searchRepos(username);
+_selectCompany(String company, context) async {
+  var response = await CompanyNetworking.searchCompany(company);
   if (response != null) {
     Navigator.push(
       context,
       new MaterialPageRoute(
-        builder: (context) => ListRepositories(response),
+        builder: (context) => Company_screen(response),
       ),
     );
   } else {
