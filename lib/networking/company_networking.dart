@@ -20,7 +20,7 @@ class CompanyNetworking {
 
       return Company.fromJson(bodyJson);
     } else {
-      throw Exception('Failed to load post');
+      return null;
     }
   }
 }
