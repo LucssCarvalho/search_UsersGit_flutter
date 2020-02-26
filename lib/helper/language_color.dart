@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Map<String, Color> colorList = {
+  null: Colors.grey,
   "1C Enterprise": Color(0xff814CCC),
   "ABAP": Color(0xffE8274B),
   "ActionScript": Color(0xff882B0F),
