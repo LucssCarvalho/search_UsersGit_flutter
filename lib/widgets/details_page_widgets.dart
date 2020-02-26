@@ -6,7 +6,7 @@ import 'package:github_users_flutter/networking/repository_networking.dart';
 import 'package:github_users_flutter/screens/ListRepositories_screen.dart';
 import 'package:github_users_flutter/screens/company_screen.dart';
 
-cardDataUser( user, context) {
+cardDataUser(user, context) {
   return Padding(
     padding: const EdgeInsets.all(5.0),
     child: Card(
@@ -104,8 +104,8 @@ _selectCompany(String company, context) async {
   } else {
     return showDialog(
       builder: (BuildContext context) => CustomDialog(
-        title: "Repository not found",
-        description: "Repository not found",
+        title: "company not found",
+        description: "company does not exist or has an anonymity clause",
         buttonText: "back",
       ),
       context: context,
