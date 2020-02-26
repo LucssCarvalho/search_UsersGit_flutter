@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:github_users_flutter/domain/event_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
 import 'package:github_users_flutter/helper/dialog.dart';
+import 'package:github_users_flutter/networking/events_networking.dart';
 import 'package:github_users_flutter/networking/user_network.dart';
 
 import 'User_screen.dart';
@@ -14,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   String username;
   User user;
+  List<Event> eventList;
   TextEditingController userNameController = TextEditingController();
 
   @override
@@ -97,16 +100,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   _selectDate(username) async {
-    var response = await UserNetworking.searchUser(username);
-    if (response != null) {
+    var responseUser = await UserNetworking.searchUser(username);
+    if (responseUser != null) {
+      var responseEvents = await EventsNetworking.searchEvent(username);
       setState(() {
-        user = response;
+        eventList = responseEvents;
+        user = responseUser;
       });
       if (_formKey.currentState.validate()) {
         Navigator.push(
           context,
           new MaterialPageRoute(
-            builder: (context) => User_screen(user),
+            builder: (context) => User_screen(user, eventList),
           ),
         );
       }

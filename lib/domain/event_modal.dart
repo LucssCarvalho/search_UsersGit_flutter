@@ -4,10 +4,10 @@ import 'actor_modal.dart';
 import 'payload_modal.dart';
 import 'repo_modal.dart';
 
-part 'events_modal.g.dart';
+part 'event_modal.g.dart';
 
 @JsonSerializable(explicitToJson: true, fieldRename: FieldRename.snake)
-class Events {
+class Event {
   String id;
   String type;
   Actor actor;
@@ -16,7 +16,7 @@ class Events {
   bool public;
   String createdAt;
 
-  Events(
+  Event(
       {this.id,
       this.type,
       this.actor,
@@ -24,4 +24,7 @@ class Events {
       this.payload,
       this.public,
       this.createdAt});
+  factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EventToJson(this);
 }

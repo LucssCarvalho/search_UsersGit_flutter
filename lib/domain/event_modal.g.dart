@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'events_modal.dart';
+part of 'event_modal.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Events _$EventsFromJson(Map<String, dynamic> json) {
-  return Events(
+Event _$EventFromJson(Map<String, dynamic> json) {
+  return Event(
     id: json['id'] as String,
     type: json['type'] as String,
     actor: json['actor'] == null
@@ -24,7 +24,7 @@ Events _$EventsFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$EventsToJson(Events instance) => <String, dynamic>{
+Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'id': instance.id,
       'type': instance.type,
       'actor': instance.actor?.toJson(),

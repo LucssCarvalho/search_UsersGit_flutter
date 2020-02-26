@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:github_users_flutter/domain/event_modal.dart';
 import 'package:github_users_flutter/domain/repository_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
+import 'package:github_users_flutter/networking/events_networking.dart';
 import 'package:github_users_flutter/widgets/details_page_widgets.dart';
 
 class User_screen extends StatefulWidget {
   User newUser;
-  User_screen(this.newUser);
+  List<Event> eventList;
+  User_screen(this.newUser, this.eventList);
   @override
   _User_screenState createState() => _User_screenState();
 }
@@ -21,10 +24,23 @@ class _User_screenState extends State<User_screen> {
       ),
       body: Center(
         child: Column(
-          children: <Widget>[
-            _createUser(),
-          ],
+          children: <Widget>[_createUser(), _createEvents()],
         ),
+      ),
+    );
+  }
+
+  _createEvents() {
+    return Expanded(
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: widget.eventList == null ? 0 : widget.eventList.length,
+        itemBuilder: (BuildContext context, int index) {
+          var repository = widget.eventList[index];
+          return Container(
+            child: Text(repository.type),
+          );
+        },
       ),
     );
   }
@@ -87,5 +103,11 @@ class _User_screenState extends State<User_screen> {
         ],
       ),
     );
+  }
+
+  Future<List<Event>> createQuotationsFuture(User newUser) async {
+    Future response = EventsNetworking.searchEvent(newUser.login);
+
+    return response;
   }
 }
