@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../domain/company_modal.dart';
 import '../domain/company_modal.dart';
 
@@ -11,7 +10,6 @@ class Company_screen extends StatefulWidget {
 }
 
 class _Company_screenState extends State<Company_screen> {
-  var dateFormat = new DateFormat("dd/MM/yyyy");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,8 +81,7 @@ class _Company_screenState extends State<Company_screen> {
                 padding: const EdgeInsets.only(left: 45.0, right: 45, top: 10),
                 child: Column(
                   children: <Widget>[
-                    label(Icons.cake,
-                        'creation: ${(DateFormat("yyyy-MM-dd").parse(company.createdAt))}'),
+                    label(Icons.cake, 'creation: ${company.createdAt}'),
                     label(Icons.import_contacts,
                         'publics repositories: ${company.publicRepos}'),
                     label(Icons.person, 'mail: ${company.email}'),
