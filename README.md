@@ -2,7 +2,7 @@
 
 Projeto para aprender novas funcionalidades na linguagem dart.
  
- * conexão com api do Github.
+ * Utilizando api do Github.
  * Visualização dos repositórios públicos.
  * Visualização da compania.
 
