@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_users_flutter/domain/user_modal.dart';
-import 'package:github_users_flutter/widgets/details_page_widgets.dart';
-
+import 'package:intl/intl.dart';
 import '../domain/company_modal.dart';
 import '../domain/company_modal.dart';
 
@@ -13,18 +11,16 @@ class Company_screen extends StatefulWidget {
 }
 
 class _Company_screenState extends State<Company_screen> {
+  var dateFormat = new DateFormat("dd/MM/yyyy");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('company'),
         backgroundColor: Color(0xff24292E),
       ),
       body: Center(
-        child: Column(
-          children: <Widget>[
-            _createCompany(),
-          ],
-        ),
+        child: _createCompany(),
       ),
     );
   }
@@ -33,10 +29,7 @@ class _Company_screenState extends State<Company_screen> {
     Company company = widget.newCompany;
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff3A556A), Color(0xff24292E)]),
+        color: Colors.grey[300],
         boxShadow: [
           new BoxShadow(
             color: Colors.black,
@@ -65,7 +58,7 @@ class _Company_screenState extends State<Company_screen> {
                     Text(
                       '${company.login}',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.grey[900],
                         fontSize: 20,
                         decoration: TextDecoration.none,
                       ),
@@ -73,7 +66,7 @@ class _Company_screenState extends State<Company_screen> {
                     Text(
                       '${company.name != null ? company.name : 'no name defined'}',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.grey[600],
                         fontSize: 15,
                         decoration: TextDecoration.none,
                       ),
@@ -83,9 +76,74 @@ class _Company_screenState extends State<Company_screen> {
               ),
             ],
           ),
-          cardDataUser(company, context),
+          Column(
+            children: <Widget>[
+              labelDescription(company.description),
+              Padding(
+                padding: const EdgeInsets.only(left: 45.0, right: 45, top: 10),
+                child: Column(
+                  children: <Widget>[
+                    label(Icons.cake,
+                        'creation: ${(DateFormat("yyyy-MM-dd").parse(company.createdAt))}'),
+                    label(Icons.import_contacts,
+                        'publics repositories: ${company.publicRepos}'),
+                    label(Icons.person, 'mail: ${company.email}'),
+                    label(Icons.public, 'blog: ${company.blog}'),
+                    label(Icons.location_on, 'location: ${company.location}'),
+                  ],
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
   }
+}
+
+Widget labelDescription(String description) {
+  return Container(
+    decoration: BoxDecoration(
+        color: Colors.white, borderRadius: BorderRadius.circular(15)),
+    width: 300,
+    padding: EdgeInsets.all(20),
+    child: Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              'description:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+              description == '' || null ? 'without description' : description),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget label(IconData labelIcon, String label) {
+  return Padding(
+    padding: EdgeInsets.only(top: 8),
+    child: Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Icon(labelIcon),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                  label == null ? 'data not recorded by the company' : label),
+            ),
+          ],
+        ),
+        Divider(),
+      ],
+    ),
+  );
 }
