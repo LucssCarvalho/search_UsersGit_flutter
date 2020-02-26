@@ -79,7 +79,7 @@ class _ListRepositoriesState extends State<ListRepositories> {
               padding: const EdgeInsets.only(left: 8.0),
               child: Container(
                 child: Text(
-                  '${repository.description}',
+                  '${repository.description == null ? 'description not defined' : repository.description}',
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -97,7 +97,7 @@ class _ListRepositoriesState extends State<ListRepositories> {
                       left: 5.0,
                     ),
                     child: Text(
-                      '${repository.language}',
+                      '${repository.language == null ? 'undefined language' : repository.language}',
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
