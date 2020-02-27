@@ -14,8 +14,6 @@ class User_screen extends StatefulWidget {
 }
 
 class _User_screenState extends State<User_screen> {
-  Future<List<Repository>> _repositoriesFuture;
-  List<Repository> _repositories;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +21,11 @@ class _User_screenState extends State<User_screen> {
         backgroundColor: Color(0xff24292E),
       ),
       body: Center(
-        child: Column(
-          children: <Widget>[_createUser(), _createEvents()],
+        child: Container(
+          color: Colors.blueGrey[100],
+          child: Column(
+            children: <Widget>[_createUser(), _createEvents()],
+          ),
         ),
       ),
     );
@@ -36,9 +37,65 @@ class _User_screenState extends State<User_screen> {
         scrollDirection: Axis.vertical,
         itemCount: widget.eventList == null ? 0 : widget.eventList.length,
         itemBuilder: (BuildContext context, int index) {
-          var repository = widget.eventList[index];
-          return Container(
-            child: Text(repository.type),
+          var event = widget.eventList[index];
+          return Padding(
+            padding: const EdgeInsets.only(
+              left: 25.0,
+              right: 25.0,
+              top: 20,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
+              height: 150,
+              width: 100,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'event type',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          Text(event.type),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'Repository',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          Text(event.repo.name),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'creation',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          Text(event.createdAt),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -104,10 +161,36 @@ class _User_screenState extends State<User_screen> {
       ),
     );
   }
-
-  Future<List<Event>> createQuotationsFuture(User newUser) async {
-    Future response = EventsNetworking.searchEvent(newUser.login);
-
-    return response;
-  }
 }
+
+//  Column(
+//             children: <Widget>[
+//               Padding(
+//                 padding: const EdgeInsets.all(8.0),
+//                 child: Row(
+//                   children: <Widget>[
+//                     Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: <Widget>[
+//                         Row(
+//                           children: <Widget>[
+//                             Text(event.repo.name),
+//                           ],
+//                         ),
+//                         Row(
+//                           children: <Widget>[
+//                             Text(event.payload.commits == null
+//                                 ? 'teste'
+//                                 : event.payload.commits[0].message),
+//                           ],
+//                         ),
+//                       ],
+//                     )
+//                   ],
+//                 ),
+//               ),
+//               Divider(
+//                 color: Colors.black,
+//               )
+//             ],
+//           );
