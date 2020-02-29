@@ -3,6 +3,8 @@ import 'package:github_users_flutter/domain/repository_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
 import 'package:github_users_flutter/helper/language_color.dart';
 import 'package:github_users_flutter/networking/repository_networking.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 
 class ListRepositories extends StatefulWidget {
   List<Repository> repositoriesList;
@@ -13,6 +15,13 @@ class ListRepositories extends StatefulWidget {
 }
 
 class _ListRepositoriesState extends State<ListRepositories> {
+  String convertDateFromString(String strDate) {
+    DateTime todayDate = DateTime.parse(strDate).toLocal();
+    var res =
+        formatDate(todayDate, [dd, '/', mm, '/', yyyy, ' - ', hh, ':', nn]);
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +61,7 @@ class _ListRepositoriesState extends State<ListRepositories> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 80,
+        height: 85,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
@@ -85,21 +94,52 @@ class _ListRepositoriesState extends State<ListRepositories> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 5),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: colorList[repository.language],
-                    radius: 5,
+                  Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundColor: colorList[repository.language],
+                            radius: 5,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 5.0,
+                            ),
+                            child: Text(
+                              '${repository.language == null ? 'undefined language' : repository.language}',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 5.0,
-                    ),
-                    child: Text(
-                      '${repository.language == null ? 'undefined language' : repository.language}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.cake,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 5.0,
+                            ),
+                            child: Text(
+                              '${convertDateFromString(repository.createdAt)}',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ],
               ),
