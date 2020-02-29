@@ -22,8 +22,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons: "^0.7.4"
+
 flutter:
   assets:
     - assets/github-mark.png
 
   uses-material-design: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icone_app.png"
