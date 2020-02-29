@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../domain/company_modal.dart';
 import '../domain/company_modal.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 
 class Company_screen extends StatefulWidget {
   Company newCompany;
@@ -10,6 +12,13 @@ class Company_screen extends StatefulWidget {
 }
 
 class _Company_screenState extends State<Company_screen> {
+  String convertDateFromString(String strDate) {
+    DateTime todayDate = DateTime.parse(strDate).toLocal();
+    var res =
+        formatDate(todayDate, [dd, '/', mm, '/', yyyy, ' - ', hh, ':', nn]);
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +90,8 @@ class _Company_screenState extends State<Company_screen> {
                 padding: const EdgeInsets.only(left: 45.0, right: 45, top: 10),
                 child: Column(
                   children: <Widget>[
-                    label(Icons.cake, 'creation: ${company.createdAt}'),
+                    label(Icons.cake,
+                        'creation: ${convertDateFromString(company.createdAt)}'),
                     label(Icons.import_contacts,
                         'publics repositories: ${company.publicRepos}'),
                     label(Icons.person, 'mail: ${company.email}'),

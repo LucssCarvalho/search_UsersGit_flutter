@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:github_users_flutter/domain/event_modal.dart';
-import 'package:github_users_flutter/domain/repository_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
-import 'package:github_users_flutter/networking/events_networking.dart';
 import 'package:github_users_flutter/widgets/details_page_widgets.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 
 class User_screen extends StatefulWidget {
   User newUser;
@@ -38,6 +38,14 @@ class _User_screenState extends State<User_screen> {
         itemCount: widget.eventList == null ? 0 : widget.eventList.length,
         itemBuilder: (BuildContext context, int index) {
           var event = widget.eventList[index];
+
+          String convertDateFromString(String strDate) {
+            DateTime todayDate = DateTime.parse(strDate).toLocal();
+            var res = formatDate(
+                todayDate, [dd, '/', mm, '/', yyyy, ' - ', hh, ':', nn]);
+            return res;
+          }
+
           return Padding(
             padding: const EdgeInsets.only(
               left: 25.0,
@@ -88,7 +96,7 @@ class _User_screenState extends State<User_screen> {
                             'creation',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(event.createdAt),
+                          Text(convertDateFromString(event.createdAt)),
                         ],
                       ),
                     ),
@@ -162,35 +170,3 @@ class _User_screenState extends State<User_screen> {
     );
   }
 }
-
-//  Column(
-//             children: <Widget>[
-//               Padding(
-//                 padding: const EdgeInsets.all(8.0),
-//                 child: Row(
-//                   children: <Widget>[
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: <Widget>[
-//                         Row(
-//                           children: <Widget>[
-//                             Text(event.repo.name),
-//                           ],
-//                         ),
-//                         Row(
-//                           children: <Widget>[
-//                             Text(event.payload.commits == null
-//                                 ? 'teste'
-//                                 : event.payload.commits[0].message),
-//                           ],
-//                         ),
-//                       ],
-//                     )
-//                   ],
-//                 ),
-//               ),
-//               Divider(
-//                 color: Colors.black,
-//               )
-//             ],
-//           );

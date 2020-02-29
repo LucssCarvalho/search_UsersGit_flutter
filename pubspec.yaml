@@ -13,6 +13,8 @@ dependencies:
   build_runner: ^1.7.3
   json_serializable: ^3.2.5
   json_annotation: ^3.0.1
+  date_format: ^1.0.8
+  intl: ^0.16.1
   
   cupertino_icons: ^0.1.2
 
