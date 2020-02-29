@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_users_flutter/domain/event_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
+import 'package:github_users_flutter/helper/convert.dart';
 import 'package:github_users_flutter/widgets/details_page_widgets.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
@@ -39,12 +40,7 @@ class _User_screenState extends State<User_screen> {
         itemBuilder: (BuildContext context, int index) {
           var event = widget.eventList[index];
 
-          String convertDateFromString(String strDate) {
-            DateTime todayDate = DateTime.parse(strDate).toLocal();
-            var res = formatDate(
-                todayDate, [dd, '/', mm, '/', yyyy, ' - ', hh, ':', nn]);
-            return res;
-          }
+          convert_date converter = new convert_date();
 
           return Padding(
             padding: const EdgeInsets.only(
@@ -96,7 +92,8 @@ class _User_screenState extends State<User_screen> {
                             'creation',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(convertDateFromString(event.createdAt)),
+                          Text(
+                              converter.convertDateFromString(event.createdAt)),
                         ],
                       ),
                     ),

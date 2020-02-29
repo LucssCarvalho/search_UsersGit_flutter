@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:github_users_flutter/domain/repository_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
+import 'package:github_users_flutter/helper/convert.dart';
 import 'package:github_users_flutter/helper/language_color.dart';
 import 'package:github_users_flutter/networking/repository_networking.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
+
+convert_date converter = new convert_date();
 
 class ListRepositories extends StatefulWidget {
   List<Repository> repositoriesList;
@@ -15,13 +18,6 @@ class ListRepositories extends StatefulWidget {
 }
 
 class _ListRepositoriesState extends State<ListRepositories> {
-  String convertDateFromString(String strDate) {
-    DateTime todayDate = DateTime.parse(strDate).toLocal();
-    var res =
-        formatDate(todayDate, [dd, '/', mm, '/', yyyy, ' - ', hh, ':', nn]);
-    return res;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +129,7 @@ class _ListRepositoriesState extends State<ListRepositories> {
                               left: 5.0,
                             ),
                             child: Text(
-                              '${convertDateFromString(repository.createdAt)}',
+                              '${converter.convertDateFromString(repository.createdAt)}',
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
