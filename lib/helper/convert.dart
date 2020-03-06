@@ -4,8 +4,13 @@ import 'package:intl/intl.dart';
 class convert_date {
   String convertDateFromString(String strDate) {
     DateTime todayDate = DateTime.parse(strDate).toLocal();
-    var res =
-        formatDate(todayDate, [dd, '/', mm, '/', yyyy, ' - ', hh, ':', nn]);
+    var res = formatDate(todayDate, [
+      dd,
+      '/',
+      mm,
+      '/',
+      yyyy,
+    ]);
     return res;
   }
 }

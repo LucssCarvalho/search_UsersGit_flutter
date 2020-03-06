@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 class User_screen extends StatefulWidget {
   User newUser;
   List<Event> eventList;
+
   User_screen(this.newUser, this.eventList);
   @override
   _User_screenState createState() => _User_screenState();
@@ -25,7 +26,11 @@ class _User_screenState extends State<User_screen> {
         child: Container(
           color: Colors.blueGrey[100],
           child: Column(
-            children: <Widget>[_createUser(), _createEvents()],
+            children: <Widget>[
+              _createUser(),
+              _createEvents(),
+              _createEventsList()
+            ],
           ),
         ),
       ),
@@ -33,14 +38,86 @@ class _User_screenState extends State<User_screen> {
   }
 
   _createEvents() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _createDay('Mon'),
+              _createDay('Tue'),
+              _createDay('Wed'),
+              _createDay('Thu'),
+              _createDay('Fri'),
+              _createDay('Sat'),
+              _createDay('Sun'),
+            ],
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _createDevelopmentDay(),
+            _createDevelopmentDay(),
+            _createDevelopmentDay(),
+            _createDevelopmentDay(),
+            _createDevelopmentDay(),
+            _createDevelopmentDay(),
+            _createDevelopmentDay(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  _createDay(day) {
+    return (Container(
+      alignment: AlignmentDirectional.center,
+      height: 50,
+      width: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black),
+      ),
+      child: Text(day, style: TextStyle(fontSize: 20)),
+    ));
+  }
+
+  _createDevelopmentDay() {
+    return (Container(
+      alignment: AlignmentDirectional.center,
+      height: 50,
+      width: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black),
+      ),
+      child: CircleAvatar(
+        backgroundColor: Colors.grey,
+        child: Icon(
+          Icons.code,
+          color: Colors.white,
+        ),
+      ),
+    ));
+  }
+
+  _createEventsList() {
+    convert_date converter = new convert_date();
     return Expanded(
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         itemCount: widget.eventList == null ? 0 : widget.eventList.length,
         itemBuilder: (BuildContext context, int index) {
-          var event = widget.eventList[index];
-
-          convert_date converter = new convert_date();
+          var event = widget.eventList
+              .where((event) {
+                return converter.convertDateFromString(event.createdAt) ==
+                    converter.convertDateFromString(
+                        DateTime.now().subtract(Duration(days: 1)).toString());
+              })
+              .take(7)
+              .toList();
 
           return Padding(
             padding: const EdgeInsets.only(
@@ -64,7 +141,7 @@ class _User_screenState extends State<User_screen> {
                             'event type',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(event.type),
+                          Text(event[0].type),
                         ],
                       ),
                     ),
@@ -78,7 +155,7 @@ class _User_screenState extends State<User_screen> {
                             'Repository',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(event.repo.name),
+                          Text(event[0].repo.name),
                         ],
                       ),
                     ),
@@ -92,8 +169,8 @@ class _User_screenState extends State<User_screen> {
                             'creation',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(
-                              converter.convertDateFromString(event.createdAt)),
+                          Text(converter
+                              .convertDateFromString(event[0].createdAt)),
                         ],
                       ),
                     ),
