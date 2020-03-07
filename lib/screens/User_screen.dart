@@ -28,7 +28,7 @@ class _User_screenState extends State<User_screen> {
           child: Column(
             children: <Widget>[
               _createUser(),
-              _createEvents(),
+              // _createEvents(),
               _createEventsList()
             ],
           ),
@@ -110,14 +110,14 @@ class _User_screenState extends State<User_screen> {
         scrollDirection: Axis.vertical,
         itemCount: widget.eventList == null ? 0 : widget.eventList.length,
         itemBuilder: (BuildContext context, int index) {
-          var event = widget.eventList
-              .where((event) {
-                return converter.convertDateFromString(event.createdAt) ==
-                    converter.convertDateFromString(
-                        DateTime.now().subtract(Duration(days: 1)).toString());
-              })
-              .take(7)
-              .toList();
+          var event = widget.eventList[index];
+          // .where((event) {
+          //   return converter.convertDateFromString(event.createdAt) ==
+          //       converter.convertDateFromString(
+          //           DateTime.now().subtract(Duration(days: 1)).toString());
+          // })
+          // .take(7)
+          // .toList();
 
           return Padding(
             padding: const EdgeInsets.only(
@@ -141,7 +141,7 @@ class _User_screenState extends State<User_screen> {
                             'event type',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(event[0].type),
+                          Text(event.type),
                         ],
                       ),
                     ),
@@ -155,7 +155,7 @@ class _User_screenState extends State<User_screen> {
                             'Repository',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(event[0].repo.name),
+                          Text(event.repo.name),
                         ],
                       ),
                     ),
@@ -169,8 +169,8 @@ class _User_screenState extends State<User_screen> {
                             'creation',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          Text(converter
-                              .convertDateFromString(event[0].createdAt)),
+                          Text(
+                              converter.convertDateFromString(event.createdAt)),
                         ],
                       ),
                     ),
