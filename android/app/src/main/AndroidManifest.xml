@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="github_users_flutter"
+        android:label="Github Users"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
