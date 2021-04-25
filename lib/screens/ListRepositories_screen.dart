@@ -20,19 +20,13 @@ class ListRepositories extends StatefulWidget {
 class _ListRepositoriesState extends State<ListRepositories> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('public repositories'),
-        backgroundColor: Color(0xff24292E),
-      ),
-      body: Container(
-        color: Colors.grey[200],
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              _createRepositories(),
-            ],
-          ),
+    return Container(
+      color: Colors.grey[200],
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            _createRepositories(),
+          ],
         ),
       ),
     );

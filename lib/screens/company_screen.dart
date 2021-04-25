@@ -5,14 +5,14 @@ import '../domain/company_modal.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 
-class Company_screen extends StatefulWidget {
+class CompanyScreen extends StatefulWidget {
   Company newCompany;
-  Company_screen(this.newCompany);
+  CompanyScreen(this.newCompany);
   @override
-  _Company_screenState createState() => _Company_screenState();
+  CompanyScreenState createState() => CompanyScreenState();
 }
 
-class _Company_screenState extends State<Company_screen> {
+class CompanyScreenState extends State<CompanyScreen> {
   convert_date converter = new convert_date();
 
   @override

@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:github_users_flutter/domain/event_modal.dart';
 import 'package:github_users_flutter/domain/user_modal.dart';
-import 'package:github_users_flutter/helper/convert.dart';
-import 'package:github_users_flutter/widgets/details_page_widgets.dart';
-import 'package:date_format/date_format.dart';
-import 'package:intl/intl.dart';
+import 'package:github_users_flutter/helper/dialog.dart';
+import 'package:github_users_flutter/networking/company_networking.dart';
+import 'package:github_users_flutter/networking/repository_networking.dart';
+import 'package:github_users_flutter/screens/ListRepositories_screen.dart';
+import 'package:github_users_flutter/screens/company_screen.dart';
+import '../domain/repository_modal.dart';
+import 'ListRepositories_screen.dart';
 
-class User_screen extends StatefulWidget {
+// ignore: must_be_immutable
+class UserScreen extends StatefulWidget {
   User newUser;
   List<Event> eventList;
 
-  User_screen(this.newUser, this.eventList);
+  UserScreen(this.newUser, this.eventList);
   @override
-  _User_screenState createState() => _User_screenState();
+  UserScreenState createState() => UserScreenState();
 }
 
-class _User_screenState extends State<User_screen> {
+class UserScreenState extends State<UserScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getRepository(widget.newUser.login);
+  }
+
+  List<Repository> repositories;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,158 +41,14 @@ class _User_screenState extends State<User_screen> {
           child: Column(
             children: <Widget>[
               _createUser(),
-              // _createEvents(),
-              _createEventsList()
+              repositories == null
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Expanded(child: ListRepositories(repositories))
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  _createEvents() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _createDay('Mon'),
-              _createDay('Tue'),
-              _createDay('Wed'),
-              _createDay('Thu'),
-              _createDay('Fri'),
-              _createDay('Sat'),
-              _createDay('Sun'),
-            ],
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _createDevelopmentDay(),
-            _createDevelopmentDay(),
-            _createDevelopmentDay(),
-            _createDevelopmentDay(),
-            _createDevelopmentDay(),
-            _createDevelopmentDay(),
-            _createDevelopmentDay(),
-          ],
-        ),
-      ],
-    );
-  }
-
-  _createDay(day) {
-    return (Container(
-      alignment: AlignmentDirectional.center,
-      height: 50,
-      width: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.black),
-      ),
-      child: Text(day, style: TextStyle(fontSize: 20)),
-    ));
-  }
-
-  _createDevelopmentDay() {
-    return (Container(
-      alignment: AlignmentDirectional.center,
-      height: 50,
-      width: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.black),
-      ),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey,
-        child: Icon(
-          Icons.code,
-          color: Colors.white,
-        ),
-      ),
-    ));
-  }
-
-  _createEventsList() {
-    convert_date converter = new convert_date();
-    return Expanded(
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: widget.eventList == null ? 0 : widget.eventList.length,
-        itemBuilder: (BuildContext context, int index) {
-          var event = widget.eventList[index];
-          // .where((event) {
-          //   return converter.convertDateFromString(event.createdAt) ==
-          //       converter.convertDateFromString(
-          //           DateTime.now().subtract(Duration(days: 1)).toString());
-          // })
-          // .take(7)
-          // .toList();
-
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 25.0,
-              right: 25.0,
-              top: 20,
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
-              height: 150,
-              width: 100,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'event type',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Text(event.type),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Repository',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Text(event.repo.name),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'creation',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Text(
-                              converter.convertDateFromString(event.createdAt)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
       ),
     );
   }
@@ -188,10 +57,7 @@ class _User_screenState extends State<User_screen> {
     User user = widget.newUser;
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff3A556A), Color(0xff24292E)]),
+        color: Colors.grey[900],
         boxShadow: [
           new BoxShadow(
             color: Colors.black,
@@ -242,5 +108,90 @@ class _User_screenState extends State<User_screen> {
         ],
       ),
     );
+  }
+
+  cardDataUser(user, context) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Card(
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            InkWell(
+              child: itemMenu(
+                user.company,
+                Icons.business,
+                'company',
+              ),
+              onTap: () {
+                _selectCompany(user.company, context);
+              },
+            ),
+            itemMenu(user.publicRepos.toString(), Icons.import_contacts,
+                'public repository'),
+            itemMenu(user.location, Icons.location_on, 'location'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  itemMenu(String option, IconData icons, String label) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: 110,
+        child: Column(
+          children: <Widget>[
+            Icon(
+              icons,
+              color: Colors.grey[700],
+              size: 35,
+            ),
+            Text(
+              label,
+              style: TextStyle(fontSize: 11),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Text(
+                option != null ? option : 'no ${label}',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  getRepository(username) async {
+    var response = await RepositoryNetworking.searchRepos(username);
+    setState(() {
+      repositories = response;
+    });
+  }
+
+  _selectCompany(String company, context) async {
+    var response = await CompanyNetworking.searchCompany(company);
+    if (response != null) {
+      Navigator.push(
+        context,
+        new MaterialPageRoute(
+          builder: (context) => CompanyScreen(response),
+        ),
+      );
+    } else {
+      return showDialog(
+        builder: (BuildContext context) => CustomDialog(
+          title: "company not found",
+          description: "company does not exist or has an anonymity clause",
+          buttonText: "back",
+        ),
+        context: context,
+      );
+    }
   }
 }

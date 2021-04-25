@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   User user;
   List<Event> eventList;
   TextEditingController userNameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,56 +29,62 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Container(
-                      height: 200,
-                      width: 200,
-                      child: Image.asset(
-                        'assets/github-mark.png',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 50.0, right: 50.0),
-                    child: TextFormField(
-                      controller: userNameController,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w300),
-                      cursorColor: Colors.blue,
-                      decoration: const InputDecoration(
-                        fillColor: Colors.greenAccent,
-                        border: OutlineInputBorder(),
-                        hintText: 'Enter your username',
-                        hintStyle: TextStyle(color: Colors.blueGrey),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your username';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: RaisedButton(
-                        onPressed: () {
-                          _selectDate(userNameController.text);
-                        },
-                        child: Text('Search'),
-                      ),
-                    ),
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Container(
+                height: 200,
+                width: 200,
+                child: Image.asset(
+                  'assets/github-mark.png',
+                ),
               ),
             ),
+            isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 50.0, right: 50.0),
+                          child: TextFormField(
+                            controller: userNameController,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300),
+                            cursorColor: Colors.blue,
+                            decoration: const InputDecoration(
+                              fillColor: Colors.greenAccent,
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter your username',
+                              hintStyle: TextStyle(color: Colors.blueGrey),
+                            ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter your username';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: RaisedButton(
+                              onPressed: () {
+                                _selectDate(userNameController.text);
+                              },
+                              child: Text('Search'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           ],
         ),
       ),
@@ -100,30 +107,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   _selectDate(username) async {
-    var responseUser = await UserNetworking.searchUser(username);
-    if (responseUser != null) {
-      var responseEvents = await EventsNetworking.searchEvent(username);
+    if (_formKey.currentState.validate()) {
       setState(() {
-        eventList = responseEvents;
-        user = responseUser;
+        isLoading = true;
       });
-      if (_formKey.currentState.validate()) {
+      var responseUser = await UserNetworking.searchUser(username);
+      if (responseUser != null) {
+        var responseEvents = await EventsNetworking.searchEvent(username);
+        setState(() {
+          eventList = responseEvents;
+          user = responseUser;
+        });
+
         Navigator.push(
           context,
           new MaterialPageRoute(
-            builder: (context) => User_screen(user, eventList),
+            builder: (context) => UserScreen(user, eventList),
           ),
         );
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        return showDialog(
+          builder: (BuildContext context) => CustomDialog(
+            title: "User not found",
+            description: "user not found or \naccount does not exist",
+            buttonText: "back",
+          ),
+          context: context,
+        );
       }
-    } else {
-      return showDialog(
-        builder: (BuildContext context) => CustomDialog(
-          title: "User not found",
-          description: "user not found or \naccount does not exist",
-          buttonText: "back",
-        ),
-        context: context,
-      );
     }
   }
 }
